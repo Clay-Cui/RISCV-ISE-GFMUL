@@ -4,6 +4,15 @@ This repository contains the source code of the implementation of the GFMUL inst
 
 This ReadMe walks through the steps of recreating the [LiteX](https://github.com/enjoy-digital/litex) framework environment, generating GFMUL extended [VexRiscV](https://github.com/SpinalHDL/VexRiscv) with SpinalHDL, and creating the SoC file as well as the bitstream used for FPGA evaluation. 
 
+If you use our code, please cite our work properly. 
+```
+@INPROCEEDINGS{10137150,
+  author={Cui, Songqiao and Balasch, Josep},
+  booktitle={2023 Design, Automation & Test in Europe Conference & Exhibition (DATE)}, 
+  title={Efficient Software Masking of AES through Instruction Set Extensions}, 
+  year={2023},
+  doi={10.23919/DATE56975.2023.10137150}}
+```
 Setup script setup.sh provides a simple solution to prepare all required environment, but you can also install them individually. 
 ```sh
 chmod +x setup.sh
@@ -90,6 +99,26 @@ python3 base.py
 popd
 ```
 This command will invoke Vivado and create `/build` directory which contains the generated SoC project and compiled software library.
+## GCC modification
+### Build from scrach
+In order to compile the firmware with custom instruction, customized toolchain is needed and needs to be compiled from source code. Note that this may take some time depending on computer configuration. More detailed tutorial can be found [here](https://pcotret.gitlab.io/riscv-custom/).
+
+First, clone the official GCC compiler. 
+```sh
+git clone https://github.com/riscv/riscv-gnu-toolchain
+```
+Then copy the two files in `riscv-gnu-toolchain` to the correct location.
+```sh
+cp toolchain/riscv-opc.h riscv-gnu-toolchain/riscv-binutils/include/opcode/riscv-opc.h
+cp toolchain/riscv-opc.c riscv-gnu-toolchain/riscv-binutils/opcodes/riscv-opc.c
+```
+To target the installation on Newlib:
+```sh
+./configure --prefix=/opt/riscv
+make
+```
+### Precompiled version
+We provide precompiled binary file in `/toolchain/bin` for easy usage.
 
 ## Firmware update:
 
